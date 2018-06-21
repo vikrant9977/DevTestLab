@@ -1,0 +1,115 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "labName": {
+            
+            "type": "String"
+        },
+       
+       
+		"environment-name": {
+            
+            "type": "String"
+        },
+		"sdc-rfx-id": {
+            
+            "type": "String"
+        },
+		"segment-name": {
+            
+            "type": "String"
+        },
+		"role": {
+            
+            "type": "String"
+        }
+                  
+      
+    },
+    "variables": {
+	 "schedules_labvmsshutdown_name": "labvmsshutdown",
+     "artifactsources_public_repo_name": "public repo",
+     "virtualnetworks_bpenpgdmpvnamstst_name": "bpenpgdmpvnamstst",
+     "virtualnetworks_bpenpgdmpvnamstst_resourceId": "/subscriptions/64bca64b-e6ee-4d69-ad44-d9a5bdf66edd/resourceGroups/bpenpgdmpvnamstst-Migrated/providers/Microsoft.Network/virtualNetworks/BPENPGDMPVNAMSTST/subnets/DevSPSubnet2",
+     "virtualnetworks_bpenpgdmpvnamstst_externalProviderResourceId": "/subscriptions/64bca64b-e6ee-4d69-ad44-d9a5bdf66edd/resourceGroups/bpenpgdmpvnamstst-Migrated/providers/Microsoft.Network/virtualNetworks/BPENPGDMPVNAMSTST"
+          
+	},
+    "resources": [
+        {
+           
+            "type": "microsoft.devtestlab/labs",
+            "name": "[parameters('labName')]",
+            "apiVersion": "2016-05-15",
+            "location": "westeurope",
+            "tags": {
+                "environment-name": "[parameters('environment-name')]",
+                "sdc-rfx-id": "[parameters('sdc-rfx-id')]",
+                "segment-name": "[parameters('segment-name')]",
+                "role": "[parameters('role')]"
+            },
+            "scale": null,
+            "properties": {
+                "labStorageType": "Premium",
+                "premiumDataDisks": "Disabled",
+                
+                
+            },
+            "dependsOn": []
+        },
+        
+        
+     
+       
+        {
+           
+            "type": "microsoft.devtestlab/labs/virtualnetworks",
+            "name": "[concat(parameters('labName'), '/', variables('virtualnetworks_bpenpgdmpvnamstst_name'))]",
+            "apiVersion": "2016-05-15",
+            "scale": null,
+            "properties": {
+                "allowedSubnets": [
+                    {
+                        "resourceId": "[variables('virtualnetworks_bpenpgdmpvnamstst_resourceId')]",
+                        "labSubnetName": "DevSPSubnet2",
+                        "allowPublicIp": "Allow"
+                    }
+                ],
+                "description": "",
+                "externalProviderResourceId": "[variables('virtualnetworks_bpenpgdmpvnamstst_externalProviderResourceId')]",
+                "subnetOverrides": [
+                    
+                    
+                    
+                  
+                   
+                   
+                    {
+                        "resourceId": "[variables('virtualnetworks_bpenpgdmpvnamstst_resourceId')]",
+                        "labSubnetName": "DevSPSubnet2",
+                        "useInVmCreationPermission": "Allow",
+                        "usePublicIpAddressPermission": "Allow",
+                        "sharedPublicIpAddressConfiguration": {
+                            "allowedPorts": [
+                                {
+                                    "transportProtocol": "Tcp",
+                                    "backendPort": 3389
+                                },
+                                {
+                                    "transportProtocol": "Tcp",
+                                    "backendPort": 22
+                                }
+                            ]
+                        }
+                    }
+                    
+                  
+                ],
+                
+            },
+            "dependsOn": [
+                "[resourceId('microsoft.devtestlab/labs', parameters('labName'))]"
+            ]
+        }
+    ]
+}
