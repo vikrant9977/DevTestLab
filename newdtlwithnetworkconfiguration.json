@@ -5,25 +5,9 @@
         "labName": {
             
             "type": "String"
-        },
-       
-       
-		"environment-name": {
-            
-            "type": "String"
-        },
-		"sdc-rfx-id": {
-            
-            "type": "String"
-        },
-		"segment-name": {
-            
-            "type": "String"
-        },
-		"role": {
-            
-            "type": "String"
         }
+       
+    
                   
       
     },
@@ -42,12 +26,7 @@
             "name": "[parameters('labName')]",
             "apiVersion": "2016-05-15",
             "location": "westeurope",
-            "tags": {
-                "environment-name": "[parameters('environment-name')]",
-                "sdc-rfx-id": "[parameters('sdc-rfx-id')]",
-                "segment-name": "[parameters('segment-name')]",
-                "role": "[parameters('role')]"
-            },
+           
             "scale": null,
             "properties": {
                 "labStorageType": "Premium",
